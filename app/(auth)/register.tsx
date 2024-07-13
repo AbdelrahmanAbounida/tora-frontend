@@ -8,7 +8,7 @@ import { z } from "zod";
 import CustomButton from "@/components/custom-button";
 import AuthTextInput from "@/components/auth/auth-text-input";
 import ErrorMessage from "@/components/auth/error-msg";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { AuthContext } from "@/providers/auth-context";
 import { useToast } from "react-native-toast-notifications";
 
@@ -58,6 +58,10 @@ export default function Register() {
         setloginError(resp.error);
         toast.show(resp.error, { type: "danger" });
       }
+      toast.show("Account created successfully. Please check your email", {
+        type: "success",
+      });
+      router.push("/(auth)/login");
     } catch (error) {
       console.log({ error });
       setloginError("Something went wrong");
@@ -71,7 +75,7 @@ export default function Register() {
     throw new Error("AuthContext must be used within an AuthProvider");
   }
   const { register } = authContext;
-
+  const router = useRouter();
   const [loginError, setloginError] = useState<string>("");
   const [loading, setloading] = useState(false);
   const toast = useToast();
@@ -212,6 +216,9 @@ export default function Register() {
             {"Already have an account?  "}
             <Link href={"/(auth)/login"}>
               <Text className="text-primary">Login</Text>
+            </Link>
+            <Link href={"/(tabs)/home"}>
+              <Text className="text-primary">Home</Text>
             </Link>
           </Text>
         </View>

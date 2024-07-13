@@ -17,6 +17,7 @@ import { apollo_client } from "@/graphql/client";
 import { AuthContext, AuthProvider } from "@/providers/auth-context";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { ToastProvider } from "react-native-toast-notifications";
+import ModalProviders from "@/providers/modal-providers";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -80,6 +81,7 @@ export default function App() {
         <RootSiblingParent>
           <ToastProvider>
             <RootLayout />
+            <ModalProviders />
           </ToastProvider>
         </RootSiblingParent>
       </AuthProvider>

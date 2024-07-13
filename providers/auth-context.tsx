@@ -79,18 +79,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           password,
         }
       );
-      const { accessToken, refreshToken } = response.data;
-      console.log({ accessToken, refreshToken });
 
-      setAccessToken(accessToken);
-      setRefreshToken(refreshToken);
-      await AsyncStorage.setItem("accessToken", accessToken);
-      await AsyncStorage.setItem("refreshToken", refreshToken);
+      const res = response.data 
+      return res 
+      // const { accessToken, refreshToken } = response.data;
+      // console.log({ accessToken, refreshToken });
 
-      if (accessToken && refreshToken) {
-        router.replace("/home");
-      }
-      return { accessToken, refreshToken };
+      // setAccessToken(accessToken);
+      // setRefreshToken(refreshToken);
+      // await AsyncStorage.setItem("accessToken", accessToken);
+      // await AsyncStorage.setItem("refreshToken", refreshToken);
+
+      // if (accessToken && refreshToken) {
+      //   router.replace("/home");
+      // }
+      // return { accessToken, refreshToken };
     } catch (error) {
       console.error(error);
       const res = handleAxiosError(error as AxiosError);
