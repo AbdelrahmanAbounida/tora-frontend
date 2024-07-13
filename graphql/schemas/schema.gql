@@ -1,0 +1,89 @@
+type QLPost implements BasicItemInterface {
+  createdAt: DateTime
+  updatedAt: DateTime
+  id: Int!
+  title: String!
+  image_url: String
+  video_url: String
+  prompt: String!
+  owner: QLUser!
+  users: [QLUser!]!
+}
+
+interface BasicItemInterface {
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type QLUser {
+  id: Int!
+  name: String
+  image: String
+  email: String!
+  password: String!
+  emailVerified: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime
+  role: UserRole!
+  posts: [QLPost!]!
+  savedPosts: [QLPost!]!
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+type Query {
+  findallqlusers: [QLUser!]!
+  findqluser(id: Int!): QLUser!
+  findqlpost(id: Int!): QLPost!
+  findallposts: [QLPost!]!
+  findAllUserPosts(userId: Int!): [QLPost!]!
+  findAllUserSavedPosts(userId: Int!): [QLPost!]!
+}
+
+type Mutation {
+  createqluser(createQlUser: CreateQLUser!): QLUser!
+  updateQlUser(id: Int!, updateQlUser: UpdateQLUser!): QLUser!
+  deleteqluser(id: Int!): QLUser!
+  createqlpost(userId: Int!, createQLPost: CreateQLPost!): QLPost!
+  updateqlpost(id: Int!): QLPost!
+  deleteqlpost(id: Int!): QLPost!
+}
+
+input CreateQLUser {
+  """
+  user email
+  """
+  email: String!
+
+  """
+  user password
+  """
+  password: String!
+}
+
+input UpdateQLUser {
+  role: UserRole = USER
+  name: String
+  image: String
+}
+
+input CreateQLPost {
+  """
+  post title
+  """
+  title: String!
+
+  """
+  prompt used to generate video
+  """
+  prompt: String!
+  showowner: Boolean = true
+}
