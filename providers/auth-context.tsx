@@ -10,6 +10,8 @@ interface AuthContextProps {
   login: (email: string, password: string) => Promise<any>;
   logout: () => Promise<void>;
   accessToken: string | null;
+  setAccessToken: React.Dispatch<React.SetStateAction<string | null>>;
+  setRefreshToken: React.Dispatch<React.SetStateAction<string | null>>;
   refreshAccessToken: () => Promise<void>;
   isTokenExpired: (token: string) => boolean;
 }
@@ -80,8 +82,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
       );
 
-      const res = response.data 
-      return res 
+      const res = response.data;
+      return res;
       // const { accessToken, refreshToken } = response.data;
       // console.log({ accessToken, refreshToken });
 
@@ -170,6 +172,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         accessToken,
         refreshAccessToken,
         isTokenExpired,
+        setAccessToken,
+        setRefreshToken,
       }}
     >
       {children}

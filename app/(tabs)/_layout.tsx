@@ -46,6 +46,7 @@ export default function TabLayout() {
     throw new Error("AuthContext must be used within an AuthProvider");
   }
   const { accessToken } = authContext;
+  console.log({ accessToken });
 
   useEffect(() => {
     if (!accessToken) {

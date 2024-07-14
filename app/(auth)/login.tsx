@@ -71,8 +71,8 @@ export default function Login() {
   if (!authContext) {
     throw new Error("AuthContext must be used within an AuthProvider");
   }
-  const { login } = authContext;
-
+  const { login, accessToken } = authContext;
+  console.log({ accessToken });
   return (
     <SafeAreaView className="bg-dark h-full">
       <ScrollView className="w-full mt-[60px] px-[24px] ">
@@ -146,6 +146,9 @@ export default function Login() {
             <ActivityIndicator size="small" color="#fff" />
           ) : (
             <CustomButton
+              variant={"default"}
+              className="w-full text-white "
+              textClassName="text-lg font-semibold"
               style={{ marginTop: 10 }}
               title="Log In"
               onClick={handleSubmit(handleLogin)}

@@ -6,6 +6,8 @@ import { StatusBar } from "expo-status-bar";
 import { useRouter } from "expo-router";
 import Logo from "@/components/logo";
 import { AuthContext } from "@/providers/auth-context";
+import ApiManager from "@/utils/api-manager";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Onboard() {
   const router = useRouter();
@@ -21,6 +23,26 @@ export default function Onboard() {
       router.replace("/(tabs)/home");
     }
   }, [accessToken]);
+
+  const getMe = async () => {
+    try {
+      // const resp = await fetch("https://api.tora.com/", {
+      //   method: "GET",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: `Bearer ${accessToken}`,
+      //   },
+      // });
+      const t = await AsyncStorage.getItem("accessToken");
+      console.log({ t });
+      const resp = await ApiManager.get("/api/auth/me");
+      console.log({ resp });
+      const data = resp.data;
+      console.log({ data });
+    } catch (error) {
+      console.log({ error });
+    }
+  };
 
   return (
     <SafeAreaView className="bg-dark h-full">
@@ -63,8 +85,10 @@ export default function Onboard() {
           {/** button */}
           <CustomButton
             style={{ marginTop: 20 }}
+            className="w-full"
+            textClassName="text-white text-[15px] font-medium"
             title="Continue with Email"
-            onClick={() => router.replace("/(tabs)/home")}
+            onClick={() => router.replace("/(tabs)/home")} // {getMe} //
           />
         </View>
       </ScrollView>

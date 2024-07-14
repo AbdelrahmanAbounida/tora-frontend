@@ -11,6 +11,8 @@ import ErrorMessage from "@/components/auth/error-msg";
 import { Link, useRouter } from "expo-router";
 import { AuthContext } from "@/providers/auth-context";
 import { useToast } from "react-native-toast-notifications";
+import { useModal } from "@/hooks/use-modal";
+import { useStore } from "@/hooks/use-store";
 
 const RegisterformSchema = z
   .object({
@@ -57,11 +59,14 @@ export default function Register() {
       if (resp.error) {
         setloginError(resp.error);
         toast.show(resp.error, { type: "danger" });
+      } else {
+        toast.show("Account created successfully. Please check your email", {
+          type: "success",
+        });
+        setIsVerifyEmailModalOpen(true);
+        setCurrentUserEmail(data.email);
       }
-      toast.show("Account created successfully. Please check your email", {
-        type: "success",
-      });
-      router.push("/(auth)/login");
+      // router.push("/(auth)/login");
     } catch (error) {
       console.log({ error });
       setloginError("Something went wrong");
@@ -77,6 +82,8 @@ export default function Register() {
   const { register } = authContext;
   const router = useRouter();
   const [loginError, setloginError] = useState<string>("");
+  const { setIsVerifyEmailModalOpen } = useModal();
+  const { setCurrentUserEmail } = useStore();
   const [loading, setloading] = useState(false);
   const toast = useToast();
 
@@ -203,6 +210,9 @@ export default function Register() {
             <ActivityIndicator size="small" color="#fff" />
           ) : (
             <CustomButton
+              variant={"default"}
+              className="w-full text-white "
+              textClassName="text-lg font-medium"
               style={{ marginTop: 10 }}
               title="Signup"
               onClick={handleSubmit(handleRegister)}
@@ -217,9 +227,9 @@ export default function Register() {
             <Link href={"/(auth)/login"}>
               <Text className="text-primary">Login</Text>
             </Link>
-            <Link href={"/(tabs)/home"}>
+            {/* <Link href={"/(tabs)/home"}>
               <Text className="text-primary">Home</Text>
-            </Link>
+            </Link> */}
           </Text>
         </View>
       </ScrollView>

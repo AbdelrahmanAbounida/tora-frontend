@@ -7,7 +7,7 @@ import {
 import { useFonts } from "expo-font";
 import { Slot, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/components/useColorScheme";
@@ -19,14 +19,15 @@ import { RootSiblingParent } from "react-native-root-siblings";
 import { ToastProvider } from "react-native-toast-notifications";
 import ModalProviders from "@/providers/modal-providers";
 
+// Prevent the splash screen from auto-hiding until we manually hide it
 SplashScreen.preventAutoHideAsync();
 
 function RootLayout() {
-  const [loaded, error] = useFonts({
+  const [fontsLoaded] = useFonts({
     "Poppins-Black": require("../assets/fonts/Poppins-Black.ttf"),
     "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
-    "Poppins-ExtraBold": require("../assets/fonts/Poppins-ExtraBold.ttf"),
     "Poppins-Light": require("../assets/fonts/Poppins-Light.ttf"),
+    // "Poppins-ExtraBold": require("../assets/fonts/Poppins-ExtraBold.ttf"),
     "Poppins-Medium": require("../assets/fonts/Poppins-Medium.ttf"),
     "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
     "Poppins-SemiBold": require("../assets/fonts/Poppins-SemiBold.ttf"),
@@ -41,21 +42,32 @@ function RootLayout() {
   }
   const { accessToken } = authContext;
 
+  // State to handle when the app is ready
+  const [appIsReady, setAppIsReady] = useState(false);
+
   useEffect(() => {
-    if (error) {
-      throw error;
+    if (!fontsLoaded) {
+      return;
     }
 
-    if (loaded) {
-      SplashScreen.hideAsync();
+    async function prepare() {
+      try {
+        await SplashScreen.hideAsync();
+
+        if (!accessToken) {
+          router.replace("(auth)/login");
+        }
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setAppIsReady(true);
+      }
     }
 
-    if (loaded && !accessToken) {
-      router.replace("(auth)/login");
-    }
-  }, [error, loaded, accessToken, router]);
+    prepare();
+  }, [fontsLoaded, accessToken, router]);
 
-  if (!loaded) {
+  if (!appIsReady) {
     return null;
   }
 

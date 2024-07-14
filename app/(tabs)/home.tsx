@@ -4,8 +4,9 @@ import CustomButton from "@/components/custom-button";
 import HomeSearchInput from "@/components/home/home-search-inpt";
 import TrendingVideos from "@/components/home/trending";
 import Logo from "@/components/logo";
+import { AuthContext } from "@/providers/auth-context";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
   ActivityIndicator,
@@ -42,7 +43,11 @@ export default function TabOneScreen() {
   };
 
   const [loading, setloading] = useState(false);
-
+  const authContext = useContext(AuthContext);
+  if (!authContext) {
+    throw new Error("AuthContext must be used within an AuthProvider");
+  }
+  const { logout } = authContext;
   return (
     <SafeAreaView className="bg-dark h-full">
       <View className="p-[24px] pt-[52px]">
@@ -109,6 +114,14 @@ export default function TabOneScreen() {
             )}
           </View>
         </View>
+
+        {/** logout */}
+        <CustomButton
+          variant={"outline"}
+          title="Logout"
+          className="w-full mt-5"
+          onClick={logout}
+        />
 
         {/** Trending Videos  */}
         <TrendingVideos />
